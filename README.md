@@ -123,7 +123,6 @@ one-command scripts in `scripts/` — see [Reproducing the paper](#reproducing-t
 │   ├── REPRODUCING.md         # Step-by-step, table-by-table and figure-by-figure reproduction guide
 │   ├── ARCHITECTURE.md        # How the codebase maps onto the paper's math
 │   └── CROSSWALK.md            # Machine-checkable mirror of the paper's Appendix J.2 crosswalk table
-├── ANONYMITY.md
 ├── CITATION.cff
 ├── CONTRIBUTING.md
 ├── LICENSE
