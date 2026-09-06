@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software or the accompanying paper, please cite it as
+  below. This entry is anonymized for double-blind review; it will be
+  updated with full author information upon acceptance.
+title: >-
+  The Iterated-Logarithm Price of Post-Hoc Threshold Selection
+type: software
+authors:
+  - name: "Anonymous"
+repository-code: "<ANONYMIZED-CODE-LINK>"
+abstract: >-
+  Code accompanying an ICLR 2027 submission (under double-blind review)
+  introducing a risk-coverage certificate that remains valid under post-hoc
+  threshold selection, an iterated-logarithm lower bound showing this price
+  is unavoidable, and a block-robust extension for correlated failures.
+keywords:
+  - selective prediction
+  - conformal prediction
+  - anytime-valid inference
+  - risk control
+  - post-hoc selection
+  - confidence sequences
+license: MIT
+version: "0.1.0-anonymous"
+date-released: "2026-09-06"
+preferred-citation:
+  type: conference-paper
+  title: >-
+    The Iterated-Logarithm Price of Post-Hoc Threshold Selection
+  authors:
+    - name: "Anonymous"
+  year: 2027
+  conference:
+    name: "International Conference on Learning Representations (ICLR)"
+  notes: "Under double-blind review; BibTeX will be finalized upon acceptance."

@@ -1,0 +1,14 @@
+# Exact environment used to produce every number in the paper.
+# Versions here match Appendix J.1 (Complete hyperparameter and reproducibility reference)
+# verbatim. Do not bump versions without re-running the full suite — see docs/REPRODUCING.md.
+name: iterlog-risk
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.12.13
+  - pip
+  - pip:
+      - -r requirements.txt

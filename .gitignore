@@ -1,0 +1,47 @@
+# Generated results — every number should come from re-running the code, not a bundled file
+results/*
+!results/.gitkeep
+!results/README.md
+*.npz
+*.ckpt
+*.pt
+*.pth
+
+# Downloaded datasets / model weights
+data/raw/
+data/cache/
+.cache/
+*.hf_cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.hypothesis/
+.coverage
+htmlcov/
+
+# Environments
+.venv/
+venv/
+env/
+.conda/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+wandb/
