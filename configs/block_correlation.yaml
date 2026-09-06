@@ -1,0 +1,24 @@
+# scripts/run_block_correlation.py
+# Reproduces: Table 13 (block-correlation sweep), Figure 2. Appendix J.1: "Block-correlation
+# sweep: 1,000 reps/cell -- 5 rho values x 2 block structures x 2 levels (item/block)".
+
+delta: 0.05
+item_level_k_min: 100
+block_level_k_min: 1 # far fewer blocks than the item-level k_min convention allows
+master_seed: 20260727
+
+rho_values: [0.0, 0.2, 0.4, 0.6, 0.8]
+n_reps: 1000
+
+block_structures:
+  llm_pool:
+    n_blocks: 4 # ARC-Challenge, ARC-Easy, CommonsenseQA, OpenBookQA
+    # approximate sizes from Appendix E.1's dataset table (pool total 24,706 before the
+    # 24,000 cap; exact per-replication sizes depend on the pool draw, see src/data/pool.py)
+    approx_block_sizes: [2590, 5197, 10962, 5957]
+  cifar10:
+    n_blocks: 10 # the ten CIFAR-10 class labels
+    approx_block_sizes: [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000]
+
+output_dir: results/
+output_prefix: blockcorr

@@ -1,0 +1,25 @@
+# scripts/run_wsr_audit.py
+# Reproduces: Table 11 (betting bound before/after the Lemma 1 patch). Can run either on
+# real deployment data (requires the same models/data as configs/deployment.yaml) or, with
+# --synthetic, on the synthetic heterogeneous-risk construction used in
+# tests/test_wsr_betting.py -- useful for a quick, CPU-only sanity check of the audit logic
+# before committing to a full GPU run.
+
+delta: 0.05
+master_seed: 20260727
+
+calibration_side_audit:
+  k0: 1000 # a single pre-registered k0, no selection, no population transfer
+  n_reps: 3000 # pooled across the three base models, Appendix J.1
+
+deployment_arms:
+  r1: { n_reps: 24000 } # post-hoc argmin
+  r3: { n_reps: 24000 } # fixed k0, no selection
+
+synthetic_fallback: # used only with --synthetic
+  n_items: 1000
+  eta_range: [0.05, 0.6] # linear heterogeneity ramp, matching tests/test_wsr_betting.py
+  n_trials: 300
+
+output_dir: results/
+output_prefix: wsr_audit

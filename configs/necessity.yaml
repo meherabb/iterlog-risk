@@ -1,0 +1,22 @@
+# scripts/run_necessity_sweep.py
+# Reproduces: Table 14 (necessity vs. calibration size), Figure 1 (in-text necessity table).
+# CPU-only. Values match Appendix J.1's "Necessity ablations: 300 reps" and Section 5.2 /
+# Appendix D.6's own sweep parameters.
+
+delta: 0.05
+k_min: 100
+p: 0.15
+master_seed: 20260727
+
+c_values: [1.0, 0.75, 0.5, 0.25] # width fractions swept
+n_values: [2000, 5000, 20000, 50000] # the 25x range (2,000 to 50,000)
+n_reps: 300 # Appendix J.1: "Necessity ablations: 300 reps"
+
+# The main-body in-text table uses only n=20000 at 1000 reps -- kept as a separate,
+# higher-precision arm since it's what Section 5.2 quotes directly.
+main_body_arm:
+  n: 20000
+  n_reps: 1000
+
+output_dir: results/
+output_prefix: v3_necessity

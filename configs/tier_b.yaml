@@ -1,0 +1,26 @@
+# scripts/run_tier_b.py
+# Reproduces: Table 5 (Tier-B validity under genuine decoding noise). Needs GPU + Hugging
+# Face Hub access.
+
+delta: 0.05
+k_min: 100
+master_seed: 20260727
+
+dataset: trivia_qa
+n_questions: 4000
+models: ["qwen2.5-1.5b-instruct", "phi-3.5-mini-instruct"]
+
+decoding:
+  n_samples_per_question: 32 # Appendix J.1: "Tier B decode samples: 32/question"
+  temperature: 1.0
+  max_new_tokens: 24
+
+# self-consistency is evaluated only in Tier B (genuine repeated decoding required);
+# the other four score families that also run in Tier A/deployment are included too, so
+# the same real decodes can be checked against every score family at once.
+score_families: ["maxprob", "entropy", "seqlogprob", "hidden_centroid", "hidden_knn", "self_consistency"]
+
+bootstrap_reps: 1000 # Appendix J.1: "32 samples/question, 1,000 bootstrap reps"
+
+output_dir: results/
+output_prefix: e3

@@ -1,0 +1,26 @@
+# scripts/run_synthetic_validity.py
+# Reproduces: Table 3 (synthetic validity + ablations), Table 2 (feasibility), Figure 3
+# (feasibility phase diagram). All values below match Appendix J.1 exactly.
+
+delta: 0.05
+k_min: 100
+n: 20000 # planted-risk world size (Appendix D)
+p: 0.15 # homogeneous-world base rate used for the core validity check
+n_reps: 1000 # Appendix J.1: "Synthetic validity (V1/E1): 1,000 reps"
+master_seed: 20260727
+
+# Ablations of the band's own construction (all should still show violation rate 0.0000)
+ablations:
+  geometric_base: [2.0, 2.718281828, 1.5] # b in {2, e, 1.5}; default is the first entry
+  delta_allocation: ["polynomial", "geometric"] # default is polynomial (6/pi^2(j+1)^2)
+  score_quantization_bins: [null, 256] # null = no quantization (default), else # of bins
+
+# Feasibility table (Corollary 2), Appendix B / Table 2
+feasibility:
+  alpha: 0.10
+  n_values: [500, 1000, 2000, 5000, 10000, 20000, 50000]
+  gamma: 1.0 # best-case coverage -> 1
+  use_paper_constant: true # match the paper's released-code epsilon_n, not the theorem-correct one
+
+output_dir: results/
+output_prefix: v1_synthetic

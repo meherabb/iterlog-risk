@@ -1,0 +1,48 @@
+# scripts/run_tier_a.py
+# Reproduces: Table 4 (Tier-A summary), Table 10 (full per-arm breakdown), Figure 5
+# (real-data bands), Figure 9 (fig-realdata), Tables 15/16 (dataset/model manifests),
+# Appendix G score-family contrasts. Needs GPU + Hugging Face Hub access -- see
+# docs/REPRODUCING.md's compute note.
+
+delta: 0.05
+k_min: 100
+n_reps: 1000 # Appendix J.1: "Real-activation Tier A (E2): 1,000 reps/arm"
+master_seed: 20260727
+
+models:
+  - name: pythia-410m
+    hf_id: EleutherAI/pythia-410m
+    is_instruct: false
+  - name: qwen2.5-1.5b-instruct
+    hf_id: Qwen/Qwen2.5-1.5B-Instruct
+    is_instruct: true
+  - name: phi-3.5-mini-instruct
+    hf_id: microsoft/Phi-3.5-mini-instruct
+    is_instruct: true
+
+groups: ["pool", "mmlu"] # "pool" = ARC-Easy+ARC-Challenge+OpenBookQA+CommonsenseQA (capped 24,000)
+pool_cap: 24000
+
+# The five score families evaluated across both Tier A and the deployment protocol.
+score_families: ["maxprob", "entropy", "seqlogprob", "hidden_centroid", "hidden_knn"]
+# Verbalized confidence: evaluated in Tier A only, on instruct models only.
+verbalized_confidence:
+  enabled_for: ["qwen2.5-1.5b-instruct", "phi-3.5-mini-instruct"]
+  n_prompts: 8000
+  max_new_tokens: 4
+
+hidden_knn:
+  reference_set_size: 8000
+  k: 10
+  pca_dimension: 256
+
+include_cifar: true # the vision matched-control arm (Section 5.1)
+cifar:
+  model: resnet18
+  trained_from_scratch: true
+  epochs: 20
+  batch_size: 256
+  n_reps: 300 # smaller count than the LLM arms; see Appendix D's Tier-A summary table
+
+output_dir: results/
+output_prefix: e2

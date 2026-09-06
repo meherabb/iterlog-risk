@@ -1,0 +1,40 @@
+# scripts/run_deployment.py
+# Reproduces: Table 1 (headline overrun rates), Table 6 (utility/feasibility), Table 12
+# (margin/slack quantiles), Table 9 (conservativeness), Figures 4, 7, 10, 11, 12. The single
+# largest experimental arm in the paper -- see docs/REPRODUCING.md for the full list of
+# --cluster-bootstrap / --isolate-transfer / --plot flags this script also supports.
+
+delta: 0.05
+alpha: 0.10
+master_seed: 20260727
+
+n_cal_primary: 2000 # Appendix J.1: "Primary calibration size n_cal: 2,000"
+n_cal_sweep: [1000, 2000, 5000, 20000] # the pre-registered sweep (20,000 added post hoc, see Appendix C)
+held_out_min_size: 3000
+
+n_reps_per_setting: 1000 # Appendix J.1: "Deployment (E4): 1,000 reps/setting"
+n_settings: 24 # 3 models x 2 groups x 4 scores
+
+score_families: ["maxprob", "entropy", "hidden_centroid", "seqlogprob"] # 4 of the 7 total
+
+selection_rules: ["r1", "r2_prime", "r3", "r_adversarial"]
+
+ltt_grid_sizes: [10, 100, 1000]
+
+certificates:
+  - ours_transductive # Theorem 1
+  - ours_population # Theorem 3
+  - clopper_pearson
+  - hoeffding
+  - empirical_bernstein
+  - wsr_betting # both raw and Lemma-1-patched
+  - learn_then_test
+  - conformal_risk_control
+  - clopper_pearson_transfer_corrected
+  - hoeffding_transfer_corrected
+
+cluster_bootstrap:
+  n_bootstrap: 10000 # Appendix D.4
+
+output_dir: results/
+output_prefix: e4

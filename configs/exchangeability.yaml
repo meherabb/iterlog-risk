@@ -1,0 +1,17 @@
+# scripts/run_exchangeability.py
+# Reproduces: Table 7 (exchangeability stress test), Figure 6.
+
+delta: 0.05
+n_cal: 5000
+master_seed: 20260727
+
+model: resnet18
+calibrate_on: cifar10_clean
+deploy_on: cifar10c
+
+severities: [0, 1, 2, 3, 4, 5] # severity 0 = matched control (clean-on-clean)
+items_per_severity: 2000 # Appendix J.1: "CIFAR-10-C items per severity: 2,000"
+n_reps: 300 # Appendix J.1: "Exchangeability stress (E6): 300 reps/severity"
+
+output_dir: results/
+output_prefix: e6

@@ -1,0 +1,19 @@
+# scripts/run_group_conditional.py
+# Reproduces: Table 17 (worst-subject held-out violation, marginal vs. Bonferroni-corrected).
+
+delta: 0.05
+alpha: 0.10
+master_seed: 20260727
+
+model: phi-3.5-mini-instruct
+dataset: mmlu
+n_subjects: 57
+n_reps: 4000 # Appendix J.1: "Group-conditional (MMLU): 4,000 reps"
+
+selection_rule: r1
+band_levels:
+  marginal: 0.05 # delta = 0.05
+  bonferroni: 0.0008771929824561403 # delta / 57
+
+output_dir: results/
+output_prefix: mmlu_group

@@ -1,9 +1,7 @@
 # `configs/` — one YAML per experimental arm
 
-> **Status:** populated in Step 3 of the release, alongside the scripts that consume them.
-
 Each file here corresponds one-to-one with a script in `scripts/` and an arm named in
-`docs/REPRODUCING.md`. Planned files:
+`docs/REPRODUCING.md`:
 
 | Config | Consumed by | Paper reference |
 |---|---|---|
@@ -18,6 +16,10 @@ Each file here corresponds one-to-one with a script in `scripts/` and an arm nam
 | `exchangeability.yaml` | `scripts/run_exchangeability.py` | Section 5.7, Table 7 |
 | `scaling.yaml` | `scripts/run_scaling_experiment.py` | Appendix I |
 
-All hyperparameter values in these configs will match Appendix J.1 (Complete hyperparameter
-and reproducibility reference) exactly — that appendix table is the single source of truth
-for every default in this folder.
+All hyperparameter values in these configs match Appendix J.1 (Complete hyperparameter and
+reproducibility reference) exactly, with one correction found and fixed during development:
+`scaling.yaml`'s `selected_above_threshold: 2000` (not the full `held_out_size: 4000`) is
+the value consistent with the paper's own reported standard error of 0.0107 -- see
+`scripts/run_scaling_experiment.py`'s docstring for the arithmetic showing why the full
+held-out size cannot reproduce that number.
+

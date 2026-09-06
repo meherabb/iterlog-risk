@@ -1,0 +1,21 @@
+# scripts/run_scaling_experiment.py
+# Reproduces: Appendix I (the confounded n_cal=20,000 scaling arm), including its own power
+# calculation showing the result is confounded by an undersized holdout, not conclusive.
+
+delta: 0.05
+alpha: 0.10
+master_seed: 20260727
+
+model: phi-3.5-mini-instruct
+n_cal: 20000
+n_reps: 500
+
+held_out_size: 4000 # what's left of the pool after this split
+selected_above_threshold: 2000 # Appendix I: "about 2,000 of them above threshold" -- this,
+# not the full held-out size, is the correct n for the held-out standard-error calculation
+# (see scripts/run_scaling_experiment.py's docstring for why: sqrt(p(1-p)/n) at n=4000
+# cannot reach the paper's reported SE=0.0107 for any valid p, since it would require
+# p(1-p) > 0.25; at n=2000 it's exactly consistent).
+
+output_dir: results/
+output_prefix: scaling_n20000
