@@ -8,16 +8,20 @@
   <a href="#installation"><img alt="Python" src="https://img.shields.io/badge/python-3.12-blue.svg"></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green.svg"></a>
   <a href="#reproducing-the-paper"><img alt="Reproducible" src="https://img.shields.io/badge/reproducible-yes-brightgreen.svg"></a>
+  <a href="#tests"><img alt="Tests" src="https://img.shields.io/badge/tests-72%20passing-brightgreen.svg"></a>
   <a href="https://github.com/PyTorch/pytorch"><img alt="PyTorch" src="https://img.shields.io/badge/torch-2.10-ee4c2c.svg"></a>
   <a href="#status"><img alt="Status" src="https://img.shields.io/badge/status-code%20release%20in%20progress-yellow.svg"></a>
 </p>
 
 <p align="center">
   <a href="#tldr">TL;DR</a> &bull;
+  <a href="#the-core-idea-in-one-diagram">Core idea</a> &bull;
+  <a href="#how-this-compares">Comparison</a> &bull;
   <a href="#installation">Installation</a> &bull;
   <a href="#quickstart">Quickstart</a> &bull;
   <a href="#repository-structure">Structure</a> &bull;
-  <a href="#reproducing-the-paper">Reproducing the paper</a> &bull;
+  <a href="#theory-to-code-crosswalk">Crosswalk</a> &bull;
+  <a href="#reproducing-the-paper">Reproducing</a> &bull;
   <a href="#results-at-a-glance">Results</a> &bull;
   <a href="#citation">Citation</a>
 </p>
@@ -43,20 +47,64 @@ post-hoc selection:
    built from a time-uniform (anytime-valid) concentration argument over the *sorted filtration*.
 2. **A matching lower bound**: the band's $\sqrt{\ln\ln k / k}$ width is not slack — any
    band valid at every prefix simultaneously must pay this rate infinitely often
-   (`src/bands/lil_lower_bound.py`, with an empirical falsification harness in `scripts/necessity_sweep.py`).
+   (`src/bands/lil_lower_bound.py`, with an empirical falsification harness in `scripts/run_necessity_sweep.py`).
 3. **A block-robust extension** that survives arbitrary within-block dependence once the
    analyst commits to a block structure in advance, at no extra width penalty
    (`src/bands/block_robust.py`).
 4. **A population-level, threshold-indexed band** for deployment, with an explicit
-   feasibility condition telling you when a target risk level is reachable at all
+   feasibility condition telling you when a target risk level is reachable at all, and a
+   two-sided certificate that reports risk and coverage together at no extra cost
    (`src/bands/population_band.py`).
 5. A from-scratch, from-first-principles re-implementation of every baseline certificate used
    for comparison (`src/baselines/`), including the one-line patch to the betting/WSR bound
-   described in the paper (`src/baselines/wsr_betting.py`).
+   described in the paper (`src/baselines/wsr_betting.py`) — a real defect we found in our
+   *own* implementation, not the officially released one, and diagnosed down to a single line.
 
 Everything in `src/` is a direct, literal implementation of the theorem statements in the
 paper — every function docstring cites the exact theorem, corollary, or equation number it
-implements, so the code can be checked line-by-line against the PDF.
+implements, so the code can be checked line-by-line against the PDF. Where the paper is
+honest that a result is *empirically verified but not formally proven* (Remark 1's closed
+form), the code says so too, in the same words.
+
+## The core idea, in one diagram
+
+The entire theoretical contribution collapses to one observation: sorting by a confidence
+score is measurable in the covariates alone, so it doesn't disturb the conditional
+independence of the losses. That turns the risk&ndash;coverage curve into a martingale, and
+martingales have anytime-valid concentration for free.
+
+```mermaid
+flowchart LR
+    A["Score every item<br/>+ i.i.d. tie-breakers"] --> B["Sort by score<br/>(covariate-measurable)"]
+    B --> C["Sorted filtration<br/>F0 subset F1 subset ... subset Fk"]
+    C --> D["Centred loss sum<br/>is a martingale"]
+    D --> E["Freedman + Ville<br/>time-uniform bound"]
+    E --> F["Uniform band Uk<br/>valid at EVERY prefix,<br/>for ANY score"]
+    F -.->|"named blocks,<br/>Bhatia-Davis"| G["Block-robust<br/>(Theorem 4)"]
+    F -.->|"fixed threshold t,<br/>DKW/Massart"| H["Population band<br/>(Theorem 3)"]
+    F -.->|"is this width<br/>necessary?"| I["LIL lower bound<br/>(Theorem 2): yes"]
+```
+
+Nothing in this pipeline is new machinery — Freedman's construction, Ville's inequality,
+DKW, and Bhatia&ndash;Davis are all classical. The contribution is recognizing that
+*coverage itself* can play the role that "time" usually plays in anytime-valid inference,
+once you condition on the sort.
+
+## How this compares
+
+|                     Certificate | Valid under post-hoc selection?                | What it costs                                       |
+|---------------------------------:|:-----------------------------------------------|:-----------------------------------------------------|
+|                Clopper&ndash;Pearson | ❌ 12.7% overrun ($r_1$, this study's scale)     | &mdash;                                               |
+|                     Betting / WSR | ❌ 11.6&ndash;29.5% overrun (raw, all rules)         | &mdash;                                               |
+|                         Hoeffding | ✅ *at this study's scale* &mdash; not by design    | Excess slack the attack couldn't exploit here        |
+|               Empirical Bernstein | ✅ *at this study's scale* &mdash; not by design    | Excess slack the attack couldn't exploit here        |
+|                  Learn-then-Test | ✅ but only on its own pre-registered grid      | No certificate between grid points; a finer grid is *looser*, not tighter |
+| **Ours (Theorem 1 / Theorem 3)** | ✅ **by construction, 0 / 24,000 in deployment** | $\sqrt{\ln\ln k / k}$ &mdash; provably necessary (Theorem 2) |
+
+The two "✅ not by design" rows are not a typo and not a defence of those bounds — the paper
+reports plainly that they survived our attack because they happened to have more slack than
+the attack could exploit at this scale, which is exactly why a certificate built for the
+workflow, rather than one that merely tolerated it this time, is the point of this repository.
 
 ## Installation
 
@@ -108,7 +156,7 @@ one-command scripts in `scripts/` — see [Reproducing the paper](#reproducing-t
 ```
 .
 ├── src/                    # Theorem/corollary implementations + baselines (the library)
-│   ├── bands/               # Theorems 1, 2, 3, 4 and Corollaries 1, 2
+│   ├── bands/               # Theorems 1-4, Corollaries 1-3, Remark 1, Lemma 1's patch
 │   ├── baselines/            # Clopper-Pearson, Hoeffding, emp. Bernstein, WSR/betting, LTT, CRC
 │   ├── scoring/              # The 7 score families (Section 4)
 │   ├── data/                 # Dataset loaders and the pool-construction logic
@@ -116,7 +164,7 @@ one-command scripts in `scripts/` — see [Reproducing the paper](#reproducing-t
 ├── configs/                 # One YAML per experimental arm, keyed to the paper's own E1-E6 codes
 ├── scripts/                 # Thin, one-command entry points — one per table/figure
 ├── notebooks/               # Exploratory / illustrative notebooks (mirrors of the scripts)
-├── tests/                   # Unit + property-based tests for every theorem implementation
+├── tests/                   # Unit + property-based tests for every theorem implementation (72, all passing)
 ├── results/                 # Where generated checkpoints and CSV logs land (gitignored)
 ├── data/                    # Dataset download instructions (no data is vendored)
 ├── docs/
@@ -131,6 +179,27 @@ one-command scripts in `scripts/` — see [Reproducing the paper](#reproducing-t
 ```
 
 Full narrative walkthrough of the design in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## Theory-to-code crosswalk
+
+Every formal result in the paper has exactly one home in the code. This table is generated
+by hand from the current docstrings, not aspirational — if a row here ever disagrees with
+`src/`, the docstring is the bug.
+
+| Paper result | What it says | Code |
+|---|---|---|
+| Theorem 1 | Uniform risk&ndash;coverage band, valid at every prefix simultaneously | `src/bands/uniform_band.py::compute` |
+| Remark 1 | Explicit closed form — verified numerically, **not** formally proven | `src/bands/uniform_band.py::explicit_form` |
+| Theorem 2 | Iterated-logarithm lower bound — the $\sqrt{\ln\ln k/k}$ price is necessary | `src/bands/lil_lower_bound.py` |
+| Theorem 3 | Population, threshold-indexed band | `src/bands/population_band.py::compute` |
+| Corollary 1 | Feasibility — when a target risk level is reachable at all | `src/bands/population_band.py::feasibility_threshold` |
+| Corollary 2 | Joint risk&ndash;coverage certificate (coverage floor), free from the same DKW bound | `src/bands/population_band.py::coverage_floor` |
+| Corollary 3 | Two-sided operating-point certificate — Theorem 3 + Corollary 2, one event, no extra cost | `src/bands/population_band.py::two_sided_certificate` |
+| Theorem 4 | Block-robust band — arbitrary within-block dependence, no extra width | `src/bands/block_robust.py` |
+| Lemma 1 | $\max(A,B)$ patch — licenses the one-line WSR/betting fix | `src/baselines/wsr_betting.py` |
+
+A machine-checkable version of this same table lives in [`docs/CROSSWALK.md`](docs/CROSSWALK.md),
+mirroring the paper's own Appendix J.2.
 
 ## Reproducing the paper
 
@@ -165,16 +234,29 @@ logs in this repository — every number in the paper should come from code you 
 re-run yourself, not from a file you're asked to trust. `results/` is where your own runs will
 write their outputs.
 
+## Tests
+
+```bash
+pytest tests/
+# 72 passed
+```
+
+Every theorem, corollary, and the Lemma 1 patch has at least one test that checks it against
+a worked numerical example from the paper itself (not just internal consistency) — for
+instance, `test_explicit_form_matches_paper_worked_example` reproduces the paper's own
+0.118-vs-0.034 width comparison at $n=20{,}000$, $k=2{,}000$, to within rounding.
+
 ## Results at a glance
 
 | | This work | Best fixed-*k* baseline |
 |---|---|---|
-| Violated under post-hoc selection ($\delta=0.05$, $n=24{,}000$ held-out) | **0 / 24,000** | Clopper–Pearson: 3,043 / 24,000 |
-| Violated with exactly known conditional risk (32,300 replications) | **0 / 32,300** | — |
-| Price of uniformity vs. a single fixed threshold | $\times 2.80$ wider | — |
+| Overrun under post-hoc selection ($\delta=0.05$, $r_1$, $n=24{,}000$ held-out) | **0%** (0 / 24,000) | Clopper&ndash;Pearson: 12.7% |
+| Overrun with exactly known conditional risk (32,300 replications) | **0%** (0 / 32,300) | &mdash; |
+| Price of uniformity vs. a single fixed threshold | $\times 2.80$ wider | &mdash; |
+| Betting-bound calibration-side defect found in our own implementation | 42.0% &rarr; **0.0%** after a one-line patch (Lemma 1) | &mdash; |
 
-Full tables in the paper; every number above is reproducible from `scripts/run_deployment.py`
-and `scripts/run_synthetic_validity.py` respectively.
+Full tables in the paper; every number above is reproducible from `scripts/run_deployment.py`,
+`scripts/run_synthetic_validity.py`, and `scripts/run_wsr_audit.py` respectively.
 
 ## Citation
 
