@@ -69,7 +69,7 @@ def figure_blockcorr(results_dir: Path, out_dir: Path) -> Path | None:
 
 
 def figure_feasibility_phase(results_dir: Path, out_dir: Path) -> Path | None:
-    """Figure 3: the feasibility phase diagram (Corollary 2)."""
+        """Figure 3: the feasibility phase diagram (Corollary 1)."""
     path = results_dir / "v1_synthetic_main.npz"
     if not path.exists():
         print(f"  [skip] {path} not found -- run scripts/run_synthetic_validity.py first")
@@ -80,7 +80,7 @@ def figure_feasibility_phase(results_dir: Path, out_dir: Path) -> Path | None:
     ax.set_xscale("log")
     ax.set_xlabel("calibration size n")
     ax.set_ylabel(r"required $\hat R_k$")
-    ax.set_title("Corollary 2: feasibility threshold vs. calibration size")
+    ax.set_title("Corollary 1: feasibility threshold vs. calibration size")
     fig.tight_layout()
     out_path = out_dir / "figure_feasibility_phase.png"
     fig.savefig(out_path, dpi=150)
