@@ -21,10 +21,10 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.eval import tier_protocols
-from src.utils.determinism import derive_seed
 from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json
 
+from src.eval import tier_protocols
+from src.utils.determinism import derive_seed
 
 def genuine_decode(model, tokenizer, question: str, n_samples: int, temperature: float, max_new_tokens: int):
     """The one GPU-dependent step: decode n_samples genuine completions. Not implemented
