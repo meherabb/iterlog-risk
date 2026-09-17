@@ -22,6 +22,7 @@ from src.utils.script_helpers import ensure_output_dir, load_config, print_run_h
 
 from src.bands.lil_lower_bound import necessity_sweep
 
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", default="configs/necessity.yaml")
