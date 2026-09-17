@@ -28,6 +28,7 @@ from src.bands.validity import clopper_pearson_ci_on_rate, is_violated
 from src.eval.vision_tier_a import exchangeability_violation_gap
 from src.utils.determinism import derive_seed
 
+
 def run_severity(severity, eta_clean, scores_clean, eta_shift_fn, n_cal, delta, k_min, n_reps, master_seed):
     r"""Calibrate a band on clean data, then check it against a *shifted* eta at the same
     items -- the paper's own construction for "calibrate on clean, deploy on corrupted"
