@@ -31,6 +31,7 @@ from src.bands.validity import is_violated
 from src.data.copula import correlated_losses
 from src.utils.determinism import derive_seed
 
+
 def run_one_cell(
     structure_name, n_blocks, approx_block_sizes, rho, delta, item_k_min, block_k_min, n_reps, master_seed
 ):
