@@ -1,4 +1,4 @@
-"""Tests for src/bands/uniform_band.py -- Theorem 1 and Corollary 1."""
+"""Tests for src/bands/uniform_band.py -- Theorem 1 and Remark 1."""
 
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ def test_lambda_menu_no_overflow_at_large_j_max():
 
 def test_explicit_form_matches_paper_worked_example():
     """At n=20,000, k=2,000, Rhat_k=0.10, delta=0.05: the paper reports a width of 0.118 for
-    the explicit (Corollary 1) form and 0.034 for the exact min-form (Theorem 1) -- both
+    the explicit (Remark 1) form and 0.034 for the exact min-form (Theorem 1) -- both
     reproduced here to within rounding."""
     n = 20_000
     Rhat_full = np.zeros(n)
@@ -61,7 +61,7 @@ def test_explicit_form_matches_paper_worked_example():
 
 
 def test_explicit_form_is_nan_outside_its_validity_domain():
-    """Corollary 1 only applies when k*Rhat_k >= 2*ell(k); small k or Rhat_k near 0 should
+    """Remark 1 only applies when k*Rhat_k >= 2*ell(k); small k or Rhat_k near 0 should
     return nan rather than a number presented as if it were a valid bound."""
     n = 100
     Rhat_full = np.full(n, 1e-6)  # essentially zero risk -> far outside the validity domain

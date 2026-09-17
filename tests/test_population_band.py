@@ -24,14 +24,14 @@ def test_epsilon_n_matches_paper_remark():
     [(500, 0.033), (2000, 0.067), (20000, 0.089), (50000, 0.093)],
 )
 def test_feasibility_threshold_matches_paper_table(n, expected):
-    """Appendix B's feasibility table (Corollary 2), using the paper's own implemented
+    """Appendix B's feasibility table (Corollary 1), using the paper's own implemented
     constant, alpha=0.10, delta=0.05, gamma=1 (the best-case, coverage -> 1 threshold)."""
     threshold = pb.feasibility_threshold(alpha=0.10, n=n, delta=0.05, gamma=1.0, use_paper_constant=True)
     assert threshold == pytest.approx(expected, abs=1e-3)
 
 
 def test_feasibility_tightens_with_smaller_gamma():
-    """Corollary 2: target coverage gamma < 1 is strictly tighter by a factor 1/gamma on
+    """Corollary 1: target coverage gamma < 1 is strictly tighter by a factor 1/gamma on
     the epsilon term, so a lower target coverage should require a *lower* Rhat_k threshold
     to be feasible."""
     thr_full_coverage = pb.feasibility_threshold(0.10, n=2000, delta=0.05, gamma=1.0)
