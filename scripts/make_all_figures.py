@@ -69,7 +69,7 @@ def figure_blockcorr(results_dir: Path, out_dir: Path) -> Path | None:
 
 
 def figure_feasibility_phase(results_dir: Path, out_dir: Path) -> Path | None:
-        """Figure 3: the feasibility phase diagram (Corollary 1)."""
+    """Figure 3: the feasibility phase diagram (Corollary 1)."""
     path = results_dir / "v1_synthetic_main.npz"
     if not path.exists():
         print(f"  [skip] {path} not found -- run scripts/run_synthetic_validity.py first")
