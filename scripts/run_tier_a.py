@@ -33,6 +33,7 @@ from src.bands.validity import clopper_pearson_ci_on_rate, is_violated
 from src.data import loaders
 from src.eval import tier_protocols
 from src.scoring import entropy, maxprob, seqlogprob
+from src.utils.determinism import derive_seed
 
 SCORE_FUNCTIONS = {
     "maxprob": maxprob.from_logits,
