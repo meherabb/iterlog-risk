@@ -30,6 +30,7 @@ from src.utils.script_helpers import ensure_output_dir, load_config, print_run_h
 from src.baselines import wsr_betting
 from src.utils.determinism import derive_seed
 
+
 def calibration_side_audit(n_items, eta_range, delta, n_trials, master_seed):
     """The paper's own diagnostic: a single pre-registered k0, no selection, no transfer --
     if a calibration-side certificate is exact, it should violate at close to (not above)
