@@ -28,6 +28,7 @@ from src.bands.validity import clopper_pearson_ci_on_rate
 from src.eval import selection_rules
 from src.utils.determinism import derive_seed
 
+
 def worst_subject_violation(subject_of_item, eta, scores, losses, delta, alpha, master_seed, n_reps):
     """Calibrate one band on the *pooled* population, select a threshold via r1, then
     check whether *any single subject's* realized risk among the selected items exceeds
