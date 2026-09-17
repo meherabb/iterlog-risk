@@ -25,15 +25,16 @@ src/bands/sorted_filtration.py
 | Definition 1 (Uniform validity) | `src/bands/validity.py` | `is_uniformly_valid` |
 | Theorem 1 (Uniform risk–coverage band) | `src/bands/uniform_band.py` | `compute` |
 | Eq. (menu) — the $\lambda_j$-menu construction | `src/bands/uniform_band.py` | `_lambda_menu` |
-| Corollary 1 (Explicit closed-form band) | `src/bands/uniform_band.py` | `explicit_form` |
+| Remark 1 (Explicit closed-form band, verified but not proven) | `src/bands/uniform_band.py` | `explicit_form` |
 | Theorem 2 (Iterated-logarithm lower bound) | `src/bands/lil_lower_bound.py` | `homogeneous_world_violation_rate` |
 | Theorem 3 (Population band) | `src/bands/population_band.py` | `compute` |
-| Corollary 2 (Feasibility) | `src/bands/population_band.py` | `feasibility_threshold` |
-| Corollary 3 (Joint risk–coverage certificate) | `src/bands/population_band.py` | `coverage_floor` |
+| Corollary 1 (Feasibility) | `src/bands/population_band.py` | `feasibility_threshold` |
+| Corollary 2 (Joint risk–coverage certificate) | `src/bands/population_band.py` | `coverage_floor` |
+| Corollary 3 (Two-sided operating-point certificate) | `src/bands/population_band.py` | `two_sided_certificate` |
 | Theorem 4 (Block-robust band) | `src/bands/block_robust.py` | `compute_block_band` |
 | Bhatia–Davis step in Theorem 4's proof | `src/bands/block_robust.py` | `block_variance_bound` |
 | Lemma 1 (max-with-any-valid-bound patch) | `src/baselines/wsr_betting.py` | `patched_upper_bound` |
-| DKW embedding (Appendix A.3 / Remark 1) | `src/bands/population_band.py` | `_dkw_embedding` |
+| DKW embedding (Appendix A.3 / Remark 2) | `src/bands/population_band.py` | `_dkw_embedding` |
 
 ## Baselines (`src/baselines/`)
 
