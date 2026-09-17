@@ -18,9 +18,9 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.bands.lil_lower_bound import necessity_sweep
 from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json, save_npz
 
+from src.bands.lil_lower_bound import necessity_sweep
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
