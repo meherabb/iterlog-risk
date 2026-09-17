@@ -21,12 +21,12 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json
+
 from src.bands import sorted_filtration, uniform_band
 from src.bands.validity import clopper_pearson_ci_on_rate
 from src.eval import selection_rules
 from src.utils.determinism import derive_seed
-from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json
-
 
 def worst_subject_violation(subject_of_item, eta, scores, losses, delta, alpha, master_seed, n_reps):
     """Calibrate one band on the *pooled* population, select a threshold via r1, then
