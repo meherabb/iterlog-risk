@@ -21,12 +21,12 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json, save_npz
+
 from src.bands import sorted_filtration, uniform_band
 from src.bands.validity import clopper_pearson_ci_on_rate, is_violated
 from src.eval.vision_tier_a import exchangeability_violation_gap
 from src.utils.determinism import derive_seed
-from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json, save_npz
-
 
 def run_severity(severity, eta_clean, scores_clean, eta_shift_fn, n_cal, delta, k_min, n_reps, master_seed):
     r"""Calibrate a band on clean data, then check it against a *shifted* eta at the same
