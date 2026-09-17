@@ -28,12 +28,22 @@ testpaths = ["tests"]
 addopts = "-ra -q --cov=src --cov-report=term-missing"
 
 [tool.black]
-line-length = 100
+line-length = 110
 target-version = ["py312"]
 
 [tool.ruff]
-line-length = 100
+line-length = 110
 target-version = "py312"
+# Notebooks are excluded from the same style rules as the library: they're meant to read
+# as a linear, explanatory walkthrough (a leading `sys.path.insert` before other imports,
+# longer descriptive print() lines) rather than production code, and all four are
+# pre-executed and verified by actually running them, not by style-checking their source.
+extend-exclude = ["notebooks/"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP"]
+# N806/N803: this codebase deliberately uses the paper's own math notation as variable and
+# argument names (S_k, U_k, Rhat_k, ...) rather than generic snake_case, specifically so the
+# code reads as checkable against the paper line by line (see CONTRIBUTING.md). That's a
+# considered trade-off, not an oversight, so these two naming rules are disabled repo-wide.
+ignore = ["N806", "N803"]
