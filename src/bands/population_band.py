@@ -1,5 +1,6 @@
-r"""The population, threshold-indexed band (Theorem 3), feasibility (Corollary 2), and the
-joint risk-coverage certificate (Corollary 3).
+r"""The population, threshold-indexed band (Theorem 3), feasibility (Corollary 1), the
+joint risk-coverage certificate (Corollary 2), and the two-sided operating-point
+certificate (Corollary 3) that reports both on the single event they already share.
 
 Deployment fixes a score *threshold* :math:`t`, not a rank. Let
 :math:`\phi(t) = \Pr[s(X) \geq t]` and :math:`\rho(t) = \Pr[s(X) \geq t,\ \ell = 1]`, so the
@@ -101,7 +102,7 @@ def compute(
 def feasibility_threshold(
     alpha: float, n: int, delta: float, gamma: float = 1.0, use_paper_constant: bool = False
 ) -> float:
-    r"""Corollary 2: the largest $\hat R_k$ at which $U^{\mathrm{pop}}(t) \le \alpha$ is still
+    r"""Corollary 1: the largest $\hat R_k$ at which $U^{\mathrm{pop}}(t) \le \alpha$ is still
     achievable at coverage $\gamma = \hat\phi(t)$.
 
     .. math::
@@ -123,13 +124,45 @@ def feasibility_threshold(
 
 
 def coverage_floor(phi_hat: np.ndarray, n: int, delta: float, use_paper_constant: bool = False) -> np.ndarray:
-    r"""Corollary 3 (joint risk-coverage certificate): $\phi(t) \geq \hat\phi(t) - \varepsilon_n(\delta)$,
+    r"""Corollary 2 (joint risk-coverage certificate): $\phi(t) \geq \hat\phi(t) - \varepsilon_n(\delta)$,
     on the *same* event as Theorem 3 -- this costs nothing extra since the same two-sided
     DKW bound already controls $|\hat\phi(t) - \phi(t)|$ and Theorem 3 only used one
     direction of it.
     """
     eps = epsilon_n_as_implemented(n, delta) if use_paper_constant else epsilon_n(n, delta)
     return np.asarray(phi_hat, dtype=float) - eps
+
+
+def two_sided_certificate(
+    Rhat_k: np.ndarray, n: int, delta: float, use_paper_constant: bool = False
+) -> tuple[np.ndarray, np.ndarray]:
+    r"""Corollary 3 (two-sided operating-point certificate): the pair
+    :math:`(U^{\mathrm{pop}}(t),\ \hat\phi(t) - \varepsilon_n(\delta))` that jointly
+    upper-bounds population risk and lower-bounds population coverage at :math:`t`,
+    at no additional cost in :math:`\delta`.
+
+    This is not a new derivation -- it is Theorem 3 (:func:`compute`) and Corollary 2
+    (:func:`coverage_floor`) evaluated on the single event they already share, packaged
+    as one reportable certificate instead of two results a caller has to combine by
+    hand. Deliberately implemented as a thin wrapper around those two functions rather
+    than a fresh formula, so it can never drift out of sync with either.
+
+    Parameters
+    ----------
+    Rhat_k, n, delta, use_paper_constant:
+        Identical meaning to :func:`compute`.
+
+    Returns
+    -------
+    (risk_bound, coverage_bound):
+        Each of shape ``(n,)``, aligned with :func:`compute`'s ``phi_hat``/``U_pop``
+        (undefined entries -- ``phi_hat <= eps`` -- are ``np.nan`` in both, matching
+        :func:`compute`'s own convention).
+    """
+    result = compute(Rhat_k, n, delta, use_paper_constant=use_paper_constant)
+    coverage_bound = coverage_floor(result.phi_hat, n, delta, use_paper_constant=use_paper_constant)
+    coverage_bound = np.where(result.defined, coverage_bound, np.nan)
+    return result.U_pop, coverage_bound
 
 
 def _dkw_embedding(scores: np.ndarray, losses: np.ndarray) -> np.ndarray:
