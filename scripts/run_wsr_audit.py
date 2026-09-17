@@ -25,10 +25,10 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from src.baselines import wsr_betting
-from src.utils.determinism import derive_seed
 from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json, save_npz
 
+from src.baselines import wsr_betting
+from src.utils.determinism import derive_seed
 
 def calibration_side_audit(n_items, eta_range, delta, n_trials, master_seed):
     """The paper's own diagnostic: a single pre-registered k0, no selection, no transfer --
