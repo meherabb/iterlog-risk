@@ -8,7 +8,7 @@
   <a href="#installation"><img alt="Python" src="https://img.shields.io/badge/python-3.12-blue.svg"></a>
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green.svg"></a>
   <a href="#reproducing-the-paper"><img alt="Reproducible" src="https://img.shields.io/badge/reproducible-yes-brightgreen.svg"></a>
-  <a href="#tests"><img alt="Tests" src="https://img.shields.io/badge/tests-72%20passing-brightgreen.svg"></a>
+  <a href="#tests"><img alt="Tests" src="https://img.shields.io/badge/tests-73%20passing-brightgreen.svg"></a>
   <a href="https://github.com/PyTorch/pytorch"><img alt="PyTorch" src="https://img.shields.io/badge/torch-2.10-ee4c2c.svg"></a>
   <a href="#status"><img alt="Status" src="https://img.shields.io/badge/status-code%20release%20in%20progress-yellow.svg"></a>
 </p>
@@ -83,6 +83,16 @@ flowchart LR
     F -.->|"named blocks,<br/>Bhatia-Davis"| G["Block-robust<br/>(Theorem 4)"]
     F -.->|"fixed threshold t,<br/>DKW/Massart"| H["Population band<br/>(Theorem 3)"]
     F -.->|"is this width<br/>necessary?"| I["LIL lower bound<br/>(Theorem 2): yes"]
+
+    classDef pipeline fill:#1e3a5f,stroke:#0d1f36,stroke-width:2px,color:#ffffff,font-weight:600
+    classDef blockNode fill:#b45309,stroke:#7c3a06,stroke-width:2px,color:#ffffff,font-weight:600
+    classDef popNode fill:#0f766e,stroke:#0a4f49,stroke-width:2px,color:#ffffff,font-weight:600
+    classDef lilNode fill:#9d174d,stroke:#6b0f35,stroke-width:2px,color:#ffffff,font-weight:600
+
+    class A,B,C,D,E,F pipeline
+    class G blockNode
+    class H popNode
+    class I lilNode
 ```
 
 Nothing in this pipeline is new machinery — Freedman's construction, Ville's inequality,
@@ -92,14 +102,14 @@ once you condition on the sort.
 
 ## How this compares
 
-|                     Certificate | Valid under post-hoc selection?                | What it costs                                       |
-|---------------------------------:|:-----------------------------------------------|:-----------------------------------------------------|
-|                Clopper&ndash;Pearson | ❌ 12.7% overrun ($r_1$, this study's scale)     | &mdash;                                               |
-|                     Betting / WSR | ❌ 11.6&ndash;29.5% overrun (raw, all rules)         | &mdash;                                               |
-|                         Hoeffding | ✅ *at this study's scale* &mdash; not by design    | Excess slack the attack couldn't exploit here        |
-|               Empirical Bernstein | ✅ *at this study's scale* &mdash; not by design    | Excess slack the attack couldn't exploit here        |
-|                  Learn-then-Test | ✅ but only on its own pre-registered grid      | No certificate between grid points; a finer grid is *looser*, not tighter |
-| **Ours (Theorem 1 / Theorem 3)** | ✅ **by construction, 0 / 24,000 in deployment** | $\sqrt{\ln\ln k / k}$ &mdash; provably necessary (Theorem 2) |
+|                     Certificate | Valid under post-hoc selection?                         | What it costs                                       |
+|---------------------------------:|:---------------------------------------------------------|:-----------------------------------------------------|
+|                Clopper&ndash;Pearson | ❌ 12.7% overrun ($r_1$, this study's scale)                | &mdash;                                               |
+|                     Betting / WSR | ❌ 11.6&ndash;29.5% overrun (raw, all rules)                    | &mdash;                                               |
+|                         Hoeffding | ✅ *at this study's scale* &mdash; not by design               | Excess slack the attack couldn't exploit here        |
+|               Empirical Bernstein | ✅ *at this study's scale* &mdash; not by design               | Excess slack the attack couldn't exploit here        |
+|                  Learn-then-Test | ✅ but only on its own pre-registered grid                 | No certificate between grid points; a finer grid is *looser*, not tighter |
+| **Ours (Theorem 1 / Theorem 3)** | ✅ **by construction — 0/24,000 under $r_1$, $r_2'$, $r_3$** (1/24,000 under an adversarial rule, still within the $\delta=0.05$ budget) | $\sqrt{\ln\ln k / k}$ &mdash; provably necessary (Theorem 2) |
 
 The two "✅ not by design" rows are not a typo and not a defence of those bounds — the paper
 reports plainly that they survived our attack because they happened to have more slack than
@@ -142,9 +152,10 @@ rng = np.random.default_rng(20260727)  # the paper's master seed
 n, p = 20_000, 0.15
 losses = rng.binomial(1, p, size=n)          # homogeneous world, Section 3.2 / Theorem 2's setting
 scores = rng.normal(size=n)                   # score independent of loss
+eta = np.full(n, p)                           # true conditional risk, known exactly here
 
-U_k, Rbar_k = uniform_band.compute(losses, scores, delta=0.05, k_min=100)
-assert np.all(U_k >= Rbar_k)                  # Theorem 1's guarantee, empirically
+result = uniform_band.compute(losses, scores, delta=0.05, k_min=100, rng=rng, eta=eta)
+assert np.all(result.U_k >= result.Rbar_k)    # Theorem 1's guarantee, empirically
 print("Band never violated over", n, "prefixes.")
 ```
 
@@ -164,7 +175,7 @@ one-command scripts in `scripts/` — see [Reproducing the paper](#reproducing-t
 ├── configs/                 # One YAML per experimental arm, keyed to the paper's own E1-E6 codes
 ├── scripts/                 # Thin, one-command entry points — one per table/figure
 ├── notebooks/               # Exploratory / illustrative notebooks (mirrors of the scripts)
-├── tests/                   # Unit + property-based tests for every theorem implementation (72, all passing)
+├── tests/                   # Unit + property-based tests for every theorem implementation (73, all passing)
 ├── results/                 # Where generated checkpoints and CSV logs land (gitignored)
 ├── data/                    # Dataset download instructions (no data is vendored)
 ├── docs/
@@ -238,7 +249,7 @@ write their outputs.
 
 ```bash
 pytest tests/
-# 72 passed
+# 73 passed
 ```
 
 Every theorem, corollary, and the Lemma 1 patch has at least one test that checks it against
