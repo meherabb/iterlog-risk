@@ -1,4 +1,5 @@
-r"""The uniform risk-coverage band (Theorem 1) and its explicit closed form (Corollary 1).
+r"""The uniform risk-coverage band (Theorem 1) and its explicit closed form (Remark 1,
+verified numerically in the paper but not formally proven there).
 
 Theorem 1 (Uniform risk-coverage band). With probability at least :math:`1-\delta`,
 simultaneously for every :math:`k \geq 1`,
@@ -168,7 +169,9 @@ def _band_from_curve(Rhat_k: np.ndarray, delta: float, j_max: int = 60, b: float
 
 
 def explicit_form(Rhat_k: np.ndarray, delta: float) -> np.ndarray:
-    r"""Corollary 1's closed form: a looser but explicit alternative to :func:`_band_from_curve`.
+    r"""Remark 1's closed form: a looser, explicit alternative to :func:`_band_from_curve`,
+    presented in the paper as numerically verified rather than formally proven -- see the
+    paper's Remark 1 for the honest statement of what is and is not established here.
 
     .. math::
         \ell(k) = \ln\!\left(\frac{\pi^2 (\lceil \log_2 2k \rceil + 1)^2}{6\delta}\right),
@@ -176,8 +179,8 @@ def explicit_form(Rhat_k: np.ndarray, delta: float) -> np.ndarray:
         U^{\mathrm c}_k = \hat R_k + 4\sqrt{\ell(k)\hat R_k / k} + 8\ell(k)/k,
 
     valid whenever $k \hat R_k \geq 2\ell(k)$; entries not satisfying this are set to
-    ``np.nan`` rather than silently returning an invalid number, since the corollary's
-    guarantee simply does not apply there (small $k$, or $\hat R_k$ very close to 0).
+    ``np.nan`` rather than silently returning an invalid number, since the remark's
+    empirical guarantee simply does not apply there (small $k$, or $\hat R_k$ very close to 0).
 
     At the paper's own worked example -- $n=20{,}000$, $k=2{,}000$, $\hat R_k=0.10$,
     $\delta=0.05$ -- this returns a width of $0.118$, against $0.034$ for the exact
