@@ -21,11 +21,11 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json, save_npz
+
 from src.bands import population_band, sorted_filtration, uniform_band
 from src.bands.validity import clopper_pearson_ci_on_rate, is_violated
 from src.utils.determinism import derive_seed
-from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json, save_npz
-
 
 def run_homogeneous_arm(n, p, delta, k_min, n_reps, master_seed):
     """The core Table 3 check: homogeneous world, score independent of loss."""
