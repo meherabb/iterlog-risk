@@ -3,16 +3,6 @@
 Thanks for your interest. A couple of things are different here because this repository
 accompanies a paper under **double-blind review**.
 
-## During the review period
-
-- Please don't open issues or PRs that could reveal author identity — e.g. don't cross-link
-  to a non-anonymous account, a lab website, or prior work in a way that names the authors.
-- Bug reports and reproduction questions are very welcome. If you find a discrepancy between
-  the code and a specific theorem, table, or figure number, please cite it precisely (e.g.
-  "Theorem 3's proof in `src/bands/population_band.py` line 42") — see `docs/ARCHITECTURE.md`
-  for how the code maps onto the paper.
-- Please don't file issues containing your own uploaded data or model checkpoints; keep
-  discussion to code and methodology.
 
 ## Development setup
 
