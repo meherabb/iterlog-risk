@@ -26,13 +26,13 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json
+
 from src.bands import uniform_band
 from src.bands.validity import clopper_pearson_ci_on_rate, is_violated
 from src.data import loaders
 from src.eval import tier_protocols
 from src.scoring import entropy, maxprob, seqlogprob
-from src.utils.determinism import derive_seed
-from src.utils.script_helpers import ensure_output_dir, load_config, print_run_header, save_json
 
 SCORE_FUNCTIONS = {
     "maxprob": maxprob.from_logits,
