@@ -116,6 +116,26 @@ reports plainly that they survived our attack because they happened to have more
 the attack could exploit at this scale, which is exactly why a certificate built for the
 workflow, rather than one that merely tolerated it this time, is the point of this repository.
 
+## Key results, visualized
+
+<p align="center">
+  <img src="assets/figures/necessity_and_blockrobust_combined.png" alt="Panels (a)-(b): a band shaved to half our width looks tighter right up until it crosses the true risk, and cheaper bands fail harder the cheaper they get -- Theorem 2 made empirical. Panels (c)-(d): item-level certification breaks cleanly as induced within-block correlation grows, on both the LLM pool and CIFAR-10; block-level certification never moves -- Theorem 4 made concrete." width="850">
+  <br>
+  <em>Theorem 2 (necessity) and Theorem 4 (block-robustness), made empirical in one figure.</em>
+</p>
+
+<p align="center">
+  <img src="assets/figures/overrun_heatmap.png" alt="Held-out overrun rates by certificate and selection rule, per setting: Clopper-Pearson and the betting bound break under post-hoc selection; Hoeffding, empirical Bernstein, and our band do not." width="850">
+  <br>
+  <em>The "How this compares" table above, shown rather than told: Clopper&ndash;Pearson and the betting bound visibly break under post-hoc selection; ours never does.</em>
+</p>
+
+The remaining nine figures from the paper are all in [`assets/figures/`](assets/figures/) at
+full resolution, named identically to the `\includegraphics` calls in the paper's LaTeX source
+(swap `.pdf` for `.png`) — so any figure referenced anywhere in this README or in
+[`docs/CROSSWALK.md`](docs/CROSSWALK.md) can be found by name with no guessing.
+
+
 ## Installation
 
 ```bash
@@ -166,6 +186,8 @@ one-command scripts in `scripts/` — see [Reproducing the paper](#reproducing-t
 
 ```
 .
+├── assets/
+│   └── figures/              # PNG renders of every paper figure (see "Key results, visualized" below)
 ├── src/                    # Theorem/corollary implementations + baselines (the library)
 │   ├── bands/               # Theorems 1-4, Corollaries 1-3, Remark 1, Lemma 1's patch
 │   ├── baselines/            # Clopper-Pearson, Hoeffding, emp. Bernstein, WSR/betting, LTT, CRC
