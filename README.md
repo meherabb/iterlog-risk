@@ -219,15 +219,19 @@ arms — we kept those exact names as the organizing principle of this repositor
 inventing a new taxonomy. The full, table-by-table and figure-by-figure guide is in
 [`docs/REPRODUCING.md`](docs/REPRODUCING.md); the short version:
 
+**Note:** the necessity sweep and the block-correlation sweep are two separate experimental
+arms, but their figures were consolidated into one combined panel figure late in the paper's
+revision — each script below still produces its own data and its own panels of that figure.
+
 | Paper arm | Code | What it produces |
 |---|---|---|
 | V1 / E1 — Synthetic validity | `scripts/run_synthetic_validity.py` | Table 3 |
-| E2 — Real-activation Tier A | `scripts/run_tier_a.py` | Tables 4, 10; Figure 5 |
+| E2 — Real-activation Tier A | `scripts/run_tier_a.py` | Tables 4, 10; Figure 4 |
 | E3 — Genuine-decode Tier B | `scripts/run_tier_b.py` | Table 5 |
-| E4 — Deployment protocol | `scripts/run_deployment.py` | Table 1, 6, 12; Figures 7, 11, 12 |
-| E6 — Exchangeability stress | `scripts/run_exchangeability.py` | Table 7; Figure 6 |
-| Block-correlation sweep | `scripts/run_block_correlation.py` | Table 13; Figure 2 |
-| Necessity vs. calibration size | `scripts/run_necessity_sweep.py` | Table 14; Figure 1 |
+| E4 — Deployment protocol | `scripts/run_deployment.py` | Table 1, 6, 12; Figures 6, 10, 11 |
+| E6 — Exchangeability stress | `scripts/run_exchangeability.py` | Table 7; Figure 5 |
+| Block-correlation sweep | `scripts/run_block_correlation.py` | Table 13; Figure 1(c)&ndash;(d) |
+| Necessity vs. calibration size | `scripts/run_necessity_sweep.py` | Table 14; Figure 1(a)&ndash;(b) |
 | Group-conditional (MMLU) | `scripts/run_group_conditional.py` | Table 17 |
 | WSR betting-bound audit | `scripts/run_wsr_audit.py` | Table 11 |
 
