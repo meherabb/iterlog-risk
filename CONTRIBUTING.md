@@ -1,7 +1,7 @@
 # Contributing
 
 Thanks for your interest. A couple of things are different here because this repository
-accompanies a paper under **double-blind review**.
+accompanies a paper under **double-blind review**. Please wait until the **double blind review** period get end.
 
 
 ## Development setup
