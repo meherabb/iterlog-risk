@@ -304,9 +304,3 @@ citation upon acceptance and de-anonymization.
 ## License
 
 Released under the [MIT License](LICENSE).
-
-## Contributing
-
-Issues and pull requests are welcome once the anonymity period ends — see
-[`CONTRIBUTING.md`](CONTRIBUTING.md). During review, please do not open issues that could
-reveal author identity (e.g. cross-linking to non-anonymous accounts or prior work).
